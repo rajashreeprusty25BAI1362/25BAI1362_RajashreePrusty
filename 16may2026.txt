@@ -1,0 +1,54 @@
+SHOW DATABASES;
+
+CREATE DATABASE vitcampuschennai;
+
+USE vitcampuschennai;
+
+CREATE TABLE cseee (
+    sid INT,
+    sname VARCHAR(50),
+    smarks INT,
+    sgender VARCHAR(10),
+    stype VARCHAR(20)
+);
+
+CREATE TABLE mechh (
+    sid INT,
+    sname VARCHAR(50),
+    smarks INT,
+    sgender VARCHAR(10),
+    stype VARCHAR(20)
+);
+
+CREATE TABLE eeee (
+    sid INT,
+    sname VARCHAR(50),
+    smarks INT,
+    sgender VARCHAR(10),
+    stype VARCHAR(20)
+);
+
+INSERT INTO cseee VALUES
+(101, 'Kiran', 99, 'Male', 'Hosteler'),
+(102, 'Priya', 95, 'Female', 'DayScholar'),
+(103, 'Rahul', 88, 'Male', 'Hosteler'),
+(104, 'Sneha', 92, 'Female', 'DayScholar'),
+(105, 'Arjun', 85, 'Male', 'Hosteler');
+
+INSERT INTO mechh VALUES
+(201, 'Vikram', 81, 'Male', 'DayScholar'),
+(202, 'Anjali', 89, 'Female', 'Hosteler'),
+(203, 'Rohan', 75, 'Male', 'DayScholar'),
+(204, 'Divya', 91, 'Female', 'Hosteler'),
+(205, 'Manoj', 84, 'Male', 'DayScholar');
+
+INSERT INTO eeee VALUES
+(301, 'Aakash', 87, 'Male', 'Hosteler'),
+(302, 'Meera', 94, 'Female', 'DayScholar'),
+(303, 'Sanjay', 79, 'Male', 'Hosteler'),
+(304, 'Pooja', 90, 'Female', 'DayScholar'),
+(305, 'Naveen', 82, 'Male', 'Hosteler');
+
+SELECT * FROM cseee;
+SELECT * FROM mechh;
+SELECT * FROM eeee;
