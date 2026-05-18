@@ -1,0 +1,226 @@
+SHOW DATABASES;
+
+CREATE DATABASE vitcampus;
+
+USE vitcampus;
+
+SHOW TABLES;
+
+CREATE TABLE CSE (
+    sid INT PRIMARY KEY,
+    sname VARCHAR(30),
+    marks INT,
+    dept VARCHAR(20),
+    country VARCHAR(30)
+);
+
+DESC CSE;
+
+INSERT INTO CSE VALUES
+(101, 'Rahul', 85, 'CSE', 'India'),
+(102, 'Sneha', 90, 'CSE', 'India'),
+(103, 'Arjun', 88, 'CSE', 'Nepal'),
+(104, 'Priya', 91, 'CSE', 'India'),
+(105, 'John', 80, 'CSE', 'USA');
+
+SELECT * FROM CSE;
+
+ALTER TABLE CSE ADD (
+    sphn BIGINT,
+    sphn2 BIGINT
+);
+
+DESC CSE;
+
+INSERT INTO CSE VALUES
+(106, 'Semi', 95, 'CSE', 'SriLanka', NULL, NULL);
+
+SELECT * FROM CSE;
+
+ALTER TABLE CSE
+DROP COLUMN sphn2;
+
+DESC CSE;
+
+ALTER TABLE CSE ADD (
+    sCountry VARCHAR(30) DEFAULT 'INDIA'
+);
+
+DESC CSE;
+
+ALTER TABLE CSE
+RENAME COLUMN sCountry TO sLocation;
+
+DESC CSE;
+
+SELECT * FROM CSE;
+
+CREATE TABLE EEE (
+    id INT,
+    name VARCHAR(30)
+);
+
+INSERT INTO EEE VALUES
+(1, 'Kiran'),
+(2, 'Akash'),
+(3, 'Vikas');
+
+SELECT * FROM EEE;
+
+DELETE FROM EEE;
+
+SELECT * FROM EEE;
+
+RENAME TABLE EEE TO ECE;
+
+SHOW TABLES;
+
+CREATE TABLE Worker (
+    WORKER_ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    FIRST_NAME CHAR(25),
+    LAST_NAME CHAR(25),
+    SALARY INT(15),
+    JOINING_DATE DATETIME,
+    DEPARTMENT CHAR(25)
+);
+
+DESC Worker;
+
+INSERT INTO Worker
+(WORKER_ID, FIRST_NAME, LAST_NAME, SALARY, JOINING_DATE, DEPARTMENT)
+VALUES
+(001, 'Monika', 'Arora', 100000, '2014-02-20 09:00:00', 'HR'),
+(002, 'Niharika', 'Verma', 80000, '2014-06-11 09:00:00', 'Admin'),
+(003, 'Vishal', 'Singhal', 300000, '2014-02-20 09:00:00', 'HR'),
+(004, 'Amitabh', 'Singh', 500000, '2014-02-20 09:00:00', 'Admin'),
+(005, 'Vivek', 'Bhati', 500000, '2014-06-11 09:00:00', 'Admin'),
+(006, 'Vipul', 'Diwan', 200000, '2014-06-11 09:00:00', 'Account'),
+(007, 'Satish', 'Kumar', 75000, '2014-01-20 09:00:00', 'Account'),
+(008, 'Geetika', 'Chauhan', 90000, '2014-04-11 09:00:00', 'Admin');
+
+SELECT * FROM Worker;
+
+UPDATE Worker
+SET FIRST_NAME = 'Jayanth',
+    LAST_NAME = 'V'
+WHERE WORKER_ID = 1;
+
+UPDATE Worker
+SET SALARY = SALARY + 5000;
+
+SELECT * FROM Worker;
+
+DELETE FROM Worker
+WHERE WORKER_ID = 8;
+
+SELECT * FROM Worker;
+
+CREATE TABLE CLASS (
+    id INT,
+    name VARCHAR(30)
+);
+
+INSERT INTO CLASS VALUES
+(1, 'Ravi'),
+(2, 'Karthik'),
+(3, 'Anjali'),
+(4, 'Ramesh'),
+(5, 'Alex');
+
+SELECT * FROM CLASS;
+
+
+-- START TRANSACTION
+START TRANSACTION;
+
+UPDATE CLASS
+SET name = 'Abhijit'
+WHERE id = 5;
+
+SAVEPOINT A;
+
+INSERT INTO CLASS VALUES
+(6, 'Chris');
+
+SAVEPOINT B;
+
+INSERT INTO CLASS VALUES
+(7, 'Bravo');
+
+SAVEPOINT C;
+
+SELECT * FROM CLASS;
+
+ROLLBACK TO B;
+
+SELECT * FROM CLASS;
+
+COMMIT;
+
+CREATE TABLE ECE (
+    id INT
+);
+
+START TRANSACTION;
+
+INSERT INTO ECE VALUES (1);
+
+SAVEPOINT point_1;
+
+INSERT INTO ECE VALUES (2);
+
+SAVEPOINT point_2;
+
+INSERT INTO ECE VALUES (3);
+
+SELECT * FROM ECE;
+
+ROLLBACK TO point_2;
+
+SELECT * FROM ECE;
+
+COMMIT;
+
+DROP TABLE CSE;
+
+SHOW TABLES;
+
+-- Equal To (=)
+SELECT * FROM Worker
+WHERE SALARY = 105000;
+
+-- Greater Than (>)
+SELECT * FROM Worker
+WHERE SALARY > 100000;
+
+-- Less Than (<)
+SELECT * FROM Worker
+WHERE SALARY < 100000;
+
+-- Greater Than or Equal To (>=)
+SELECT * FROM Worker
+WHERE SALARY >= 200000;
+
+-- Less Than or Equal To (<=)
+SELECT * FROM Worker
+WHERE SALARY <= 100000;
+
+-- Not Equal To (!= or <>)
+SELECT * FROM Worker
+WHERE DEPARTMENT != 'HR';
+
+-- BETWEEN Comparator
+SELECT * FROM Worker
+WHERE SALARY BETWEEN 80000 AND 300000;
+
+-- IN Comparator
+SELECT * FROM Worker
+WHERE DEPARTMENT IN ('HR', 'Admin');
+
+-- LIKE Comparator
+SELECT * FROM Worker
+WHERE FIRST_NAME LIKE 'V%';
+
+-- IS NULL Comparator
+SELECT * FROM CSE
+WHERE sLocation IS NULL;
