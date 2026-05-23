@@ -1,0 +1,167 @@
+""" EVERYTHING IS EXECUTED IN ONLINE COMPILER """
+
+TEST-2
+
+CREATE TABLE Departments (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(50) NOT NULL,
+    location_id VARCHAR(50) NOT NULL
+);
+
+INSERT INTO Departments (dept_id, dept_name, location_id)
+VALUES
+(10, 'Consulting', 'NYC'),
+(20, 'Engineering', 'SF'),
+(30, 'R&D', 'London'),
+(40, 'Sales', 'NYC'),
+(50, 'HR', 'SF'),
+(60, 'Admin', 'London');
+
+CREATE TABLE Employees (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(50) NOT NULL,
+    manager_id INT,
+    dept_id INT,
+    salary DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (manager_id) REFERENCES Employees(employee_id),
+    FOREIGN KEY (dept_id) REFERENCES Departments(dept_id)
+);
+
+INSERT INTO Employees
+(employee_id, employee_name, manager_id, dept_id, salary)
+VALUES
+(100, 'Alice Smith (CEO)', NULL, 10, 180000.00),
+(101, 'Bob Johnson', 100, 20, 120000.00),
+(102, 'Charlie Brown', 101, 20, 95000.00),
+(103, 'Diana Prince', 100, 30, 110000.00),
+(104, 'Evan Clark', 103, 30, 85000.00),
+(105, 'Fiona Glen', 101, 20, 90000.00),
+(106, 'George King', 100, 40, 75000.00),
+(107, 'Hannah Lee', 103, 30, 88000.00),
+(108, 'Ivan Rossi', 100, 50, 60000.00),
+(109, 'Jane Doe', 101, 20, 125000.00),
+(110, 'Kevin Blue', 104, 30, 86000.00);
+
+CREATE TABLE Projects (
+    project_id INT PRIMARY KEY,
+    project_name VARCHAR(50) NOT NULL,
+    client_name VARCHAR(50) NOT NULL,
+    start_date DATE NOT NULL,
+    dept_id INT,
+    FOREIGN KEY (dept_id) REFERENCES Departments(dept_id)
+);
+
+INSERT INTO Projects
+(project_id, project_name, client_name, start_date, dept_id)
+VALUES
+(5001, 'Aurora Migration', 'GlobalTech Solutions', '2023-01-15', 20),
+(5002, 'Synergy App Dev', 'Zenith Corp', '2023-05-20', 30),
+(5003, 'Q4 Sales Strategy', 'Apex Industries', '2024-01-01', 40),
+(5004, 'Global Expansion', 'GlobalTech Solutions', '2024-03-10', 10),
+(5005, 'Internal HR Tool', 'Internal', '2024-02-01', 50),
+(5006, 'Data Analytics', 'Zenith Corp', '2022-11-01', 20),
+(5007, 'Future Tech R&D', 'R&D Dept', '2024-06-01', 30);
+
+CREATE TABLE Assignments (
+    assignment_id INT PRIMARY KEY,
+    employee_id INT,
+    project_id INT,
+    hours_worked INT NOT NULL,
+    start_date DATE NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES Employees(employee_id),
+    FOREIGN KEY (project_id) REFERENCES Projects(project_id)
+);
+
+INSERT INTO Assignments
+(assignment_id, employee_id, project_id, hours_worked, start_date)
+VALUES
+(1, 101, 5001, 150, '2023-01-15'),
+(2, 102, 5001, 160, '2023-01-15'),
+(3, 105, 5001, 140, '2023-02-01'),
+(4, 103, 5002, 80, '2023-05-20'),
+(5, 104, 5002, 70, '2023-06-01'),
+(6, 106, 5003, 5, '2024-01-01'),
+(7, 100, 5004, 20, '2024-03-10'),
+(8, 107, 5002, 75, '2023-05-25'),
+(9, 109, 5006, 200, '2022-11-01'),
+(10, 101, 5006, 250, '2022-11-01'),
+(11, 102, 5006, 180, '2022-12-01'),
+(12, 110, 5007, 10, '2024-06-01');
+
+SELECT * FROM Departments;
+SELECT * FROM Employees;
+SELECT * FROM Projects;
+SELECT * FROM Assignments;
+
+""" QUESTIONS AND QUERIES ARE AS FOLLOWS """
+
+1. List the Employee Name, their Department Name, and the Location Name for all employees.
+
+SELECT e.employee_name, d.dept_name, d.location_id FROM Employees e JOIN Departments d ON e.dept_id = d.dept_id;
+
+3. Find the names of Employees who have worked on a project with Client Name 'GlobalTech Solutions'. List the Employee Name and Project Name.
+
+SELECT e.employee_name, p.project_name FROM Employees e JOIN Assignments a ON e.employee_id = a.employee_id JOIN Projects p
+ON a.project_id = p.project_id WHERE p.client_name = 'GlobalTech Solutions';
+
+4. List all Departments that have no Employees currently assigned to them.
+
+SELECT d.dept_name FROM Departments d LEFT JOIN Employees e ON d.dept_id = e.dept_id WHERE e.employee_id IS NULL;
+
+6. Calculate the Average Hours Worked per Employee across all projects. List the Employee Name and the average hours.
+
+SELECT e.employee_name, AVG(a.hours_worked) AS avghours
+FROM Employees e JOIN Assignments a ON e.employee_id = a.employee_id GROUP BY e.employee_name;
+
+7. Find the Department Name(s) that have an average salary above the company-wide average salary.
+
+SELECT d.dept_name FROM Employees e JOIN Departments d ON e.dept_id = d.dept_id 
+GROUP BY d.dept_name HAVING AVG(e.salary) > ( SELECT AVG(salary) FROM Employees );
+
+8. Identify the Client Name(s) whose projects have a total combined hours worked exceeding 500 hours.
+
+SELECT p.client_name, SUM(a.hours_worked) AS thours FROM Projects p JOIN Assignments a 
+ON p.project_id = a.project_id GROUP BY p.client_name HAVING SUM(a.hours_worked) > 500;
+
+10. Calculate the total number of employees assigned to each Project, but only include projects that have more than 5 employees assigned.
+
+SELECT p.project_name, COUNT(DISTINCT a.employee_id) AS temployees FROM Projects p
+JOIN Assignments a ON p.project_id = a.project_id
+GROUP BY p.project_name HAVING COUNT(DISTINCT a.employee_id) > 5;
+
+13. List the Employee Name and Project Name for any employee who has worked less than 10 hours on a project.
+
+SELECT e.employee_name, p.project_name FROM Employees e
+JOIN Assignments a ON e.employee_id = a.employee_id JOIN Projects p
+ON a.project_id = p.project_id WHERE a.hours_worked < 10;
+
+14. Find the Project Name(s) that have no assigned employees.
+
+SELECT p.project_name FROM Projects p LEFT JOIN Assignments a ON p.project_id = a.project_id WHERE a.assignment_id IS NULL;
+
+16. Find the Employee Name and their oldest project start date.
+
+SELECT e.employee_name, MIN(a.start_date) AS oldest_project_start_date
+FROM Employees e JOIN Assignments a ON e.employee_id = a.employee_id
+GROUP BY e.employee_name;
+
+17. Use the DATE_FORMAT function to list all projects that were active in the year 2023.
+
+SELECT project_name, client_name, start_date FROM Projects
+WHERE DATE_FORMAT(start_date, '%Y') = '2023';
+
+18. Use the IFNULL function to list all Employee Names. If an employee has no manager, display "CEO" instead of NULL.
+
+SELECT e.employee_name, IFNULL(m.employee_name, 'CEO') AS MANAGER_NAME
+FROM Employees e LEFT JOIN Employees m ON e.manager_id = m.employee_id;
+
+19. Find the top 3 Departments based on the total hours worked by all their employees across all projects.
+
+SELECT d.dept_name, SUM(a.hours_worked) AS thours
+FROM Departments d JOIN Employees e ON d.dept_id = e.dept_id
+JOIN Assignments a ON e.employee_id = a.employee_id
+GROUP BY d.dept_name ORDER BY total_hours DESC LIMIT 3;
+
+21. List the Employee Name and their Manager's Name, even if the employee has no manager.
+
+SELECT e.employee_name AS employee_name, m.employee_name AS MANAGER_NAME FROM Employees e LEFT JOIN Employees m ON e.manager_id = m.employee_id;
