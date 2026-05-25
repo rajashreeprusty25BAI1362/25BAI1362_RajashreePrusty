@@ -1,0 +1,49 @@
+use vit
+
+switched to db vit
+
+db.createCollection("Workers")
+
+{ ok: 1 }
+
+show collections
+
+Student
+Workers
+
+db.Student.drop()
+
+true
+
+show collections
+
+Workers
+
+db.Workers.insert({name:'rohan',age:'35',sitename:'delhi'})DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6a145d26e1c27c01a2de8602')
+  }
+}
+db.Workers.insert({name:'mukesh',age:'25',contractorname:'billu gang'})
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6a145d63e1c27c01a2de8603')
+  }
+}
+db.Workers.find()
+{
+  _id: ObjectId('6a145d26e1c27c01a2de8602'),
+  name: 'rohan',
+  age: '35',
+  sitename: 'delhi'
+}
+{
+  _id: ObjectId('6a145d63e1c27c01a2de8603'),
+  name: 'mukesh',
+  age: '25',
+  contractorname: 'billu gang'
+}
+
